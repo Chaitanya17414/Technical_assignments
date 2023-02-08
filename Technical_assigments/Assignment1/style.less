@@ -136,6 +136,10 @@ body {
         grid-gap: 30px;
         grid-template-columns: repeat(3, 1fr);
         flex-basis: 80%;
+        .list-view {
+                display: block !important;
+                row-gap: 20px;
+            }
         .product {
             border-radius: 20px;
             border: 1px solid @font-black;
@@ -197,6 +201,15 @@ body {
                 }
                 .productHiddenPrice {
                     display: none;
+                } 
+                
+            }
+            .discount-section {
+                margin: 0;
+                list-style-type: none;
+                padding: 0;
+                .dis-amount {
+                    white-space: nowrap;
                 }
             }
         }
@@ -226,6 +239,13 @@ body {
                     }
             }
         }
+        .error {
+                color: red;
+                font-size: 12px;
+                margin:0;
+                padding: 5px 0;
+                display: none;
+        }
         .sub-total {
             padding: 15px 20px;
             border-bottom: 1px solid @border-color;
@@ -238,6 +258,11 @@ body {
                 display: flex;
                 justify-content: space-between;
                 padding-bottom: 5px;
+            }
+            .total-discount  {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
             }
         }
         .total {

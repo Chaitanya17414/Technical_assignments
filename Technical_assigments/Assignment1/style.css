@@ -112,6 +112,10 @@ body {
   grid-template-columns: repeat(3, 1fr);
   flex-basis: 80%;
 }
+.products-section .products .list-view {
+  display: block !important;
+  row-gap: 20px;
+}
 .products-section .products .product {
   border-radius: 20px;
   border: 1px solid #333;
@@ -178,6 +182,14 @@ body {
 .products-section .cart-section .mycart-summary .product-data .productHiddenPrice {
   display: none;
 }
+.products-section .cart-section .mycart-summary .discount-section {
+  margin: 0;
+  list-style-type: none;
+  padding: 0;
+}
+.products-section .cart-section .mycart-summary .discount-section .dis-amount {
+  white-space: nowrap;
+}
 .products-section .cart-section .discount {
   padding: 3px;
   display: flex;
@@ -204,6 +216,13 @@ body {
   background: #fff;
   border: 1px solid #496bc7;
 }
+.products-section .cart-section .error {
+  color: red;
+  font-size: 12px;
+  margin: 0;
+  padding: 5px 0;
+  display: none;
+}
 .products-section .cart-section .sub-total {
   padding: 15px 20px;
   border-bottom: 1px solid #496bc7;
@@ -217,6 +236,11 @@ body {
   display: flex;
   justify-content: space-between;
   padding-bottom: 5px;
+}
+.products-section .cart-section .sub-total .total-discount {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 .products-section .cart-section .total {
   font-weight: 600;

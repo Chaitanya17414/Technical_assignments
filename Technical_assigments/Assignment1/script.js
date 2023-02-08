@@ -36,42 +36,73 @@ $(document).on("click",".filter-section .filters", function() {
 
     //total
 
-    function getSum() {
-      var total = 0;
+    function getTotal() {
+      var totalPrice = 0;
       $('.productHiddenPrice').children().each(function(index, value) {
-        total += parseInt(value.innerHTML.trim(), 10);
+        totalPrice += parseInt(value.innerHTML.trim(), 10);
       });
-      return total;
+      return totalPrice;
     }
-    var total = getSum();
-    $(".sub-total .total-price").text('₹'+total+'');
-    
+    var totalData = getTotal();
+    $(".total .total-amount").text('₹'+ totalData +'');
+
     //service tax
-    var totalAmount = total;
+    var totalAmount = totalData;
     var serviceTax = parseFloat(((totalAmount/100)*21).toFixed(2));
-    var totalTaxAndPrice = serviceTax + totalAmount
+    var totalTaxAndPrice = totalAmount - serviceTax;
     $(".sub-total .tax-amount").text('₹'+ serviceTax +'');
-    $(".total .total-amount").text('₹'+ totalTaxAndPrice +'');
+     $(".sub-total .total-price").text('₹'+totalTaxAndPrice+'');
 
     //discount code
 
     $(document).on("click",".discount .add-btn", function() {
-        $.getJSON("json/discount-coupons.json", function (data) {
+      $.ajax({
+          type: "Get",
+          url: "json/discount.json",
+          dataType: "json",
+          success: function(result) {
 
-          $.each( data, function( key, val ) {
             var inputVal = $(".discount .discount-input").val();
-            if (inputVal.val() == val.discountCupon) {
-              var promoval = parseFloat((totalTaxAndPrice/100)*discountCupon);
-              $(".total .total-amount").text('₹'+ totalTaxAndPrice - promoval +'');
-              let discountdata =`<p id="` + val.discountCupon+ `">Discount</p>
-              <p >-`+promoval+`</p>`;
-                $(".sub-total .total-discount").append(discountdata);
+            
+            tmpJson = result.filter(function (key, val){
+            
+                return key.discountCupon == inputVal;
+            });
+  
+             $.each( tmpJson, function( i ) {
+               $(".error").hide();
+               var total = getTotal();
+                var promoval = parseFloat(((total/100)*tmpJson[i].discountPercentage).toFixed(2));
+                var totalPrice= (total - promoval).toFixed(2);
+
+                var discountSummary = `<li class="product-data"><p class="dis-code">Discount code applied `+tmpJson[i].discountCupon+` (`+tmpJson[i].discountPercentage+`%)</p>
+                <p class="dis-amount">-₹`+promoval+`</p></li>`;
+
+                  $(".mycart-summary .discount-section").append(discountSummary);
+            
+                let discountdata =`<li class="d-flex"><p id="` + tmpJson[i].discountCupon+ `">Discount</p>
+                <p >-₹`+promoval+`</p>
+                </li>`;
+                  $(".sub-total .total-discount").append(discountdata);
+                  $(".total .total-amount").text('₹'+ totalPrice +'');
+                  total = totalPrice;
+                  $(".discount .discount-input").val('');
+                 
+             });
+
+              if(inputVal == '') {
+              $(".error").show().text("Please Enter Discount Code");
             }
-            else {
-            alert('invalid promo');
+            else if(tmpJson.length == 0) {
+              $(".error").show().text("Please Enter Valid Code");
             }
-          });
-       });
+            
+          },
+          error: function(){
+              alert("json not found");
+          }
+      });
+    
     }); 
   });
 
@@ -83,10 +114,14 @@ $(document).on("click",".filter-section .filters", function() {
     min: 0, 
     max: 80000, 
     values: [0, 80000], 
-    slide: function(event, ui)
-    {$("#priceRange").val(ui.values[0] + " - " + ui.values[1]);}
+    slide: function(event, val)
+    {$("#priceRange").val(val.values[0] + " - " + val.values[1]);}
   });
   $("#priceRange").val($("#price-range").slider("values", 0) + " - " + $("#price-range").slider("values", 1));
+
+  //Filter by name
+
+  
 
 // function callings
 
